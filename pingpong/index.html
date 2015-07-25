@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="styles/main.css" />
+		<title>Ping Pong</title>
+	</head>
+	<body>
+		<header>
+			<h1>Ping Pong</h1>
+		</header>
+		<div id="scoreboard">
+			<div class="score">
+				Player A: <span id="scoreA">0</span>
+			</div>
+			<div class="score">
+				Player B: <span id="scoreB">0</span>
+			</div>
+		</div>
+		<div id="game">
+			<div id="playground">
+				<div id="paddleA" class="paddle"></div>
+				<div id="paddleB" class="paddle"></div>
+				<div id="ball"></div>
+			</div>
+		</div>
+		<div id="hints">
+			<ul>
+				<li>Press keys <em>W</em> and <em>S</em> to move the paddle on the left.</li>
+				<li>Press keys <em>UP</em> and <em>DOWN</em> to move the paddle on the right.</li>
+				<li>Press key <em>P</em> to pause the game</li>
+			</ul>
+		</div>
+		<footer>
+			Example of a DOM-based Ping Pong Game.
+		</footer>
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/pingpong.js"></script>
+	</body>
+</html>

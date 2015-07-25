@@ -1,0 +1,44 @@
+body {
+	background-color: #DCCAA4;
+	min-width: 500px;
+	font-family: 'Trebuchet MS', Helvetica, sans-serif;
+	color: #283B1F;
+	margin-left: 20px;
+}
+header {
+	color: #4E3E0B;
+}
+footer {
+	font-size: small;
+}
+#scoreboard {
+	margin: 10px;
+}
+#playground {
+	background: #B1A26B;
+	border: 2px dotted green;
+	width: 400px;
+	height: 200px;
+	position: relative;
+	overflow: hidden;
+}
+#ball {
+	background: #4E3E0B;
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: 150px;
+	top: 100px;
+	border-radius: 10px;
+}
+.paddle {
+	background: green;
+	left: 50px;
+	top: 70px;
+	position: absolute;
+	width: 10px;
+	height: 70px;
+}
+#paddleB {
+	left: 340px;
+}
