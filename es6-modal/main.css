@@ -1,0 +1,59 @@
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 99999;
+  opacity:1;
+}
+.modalBackdrop > div {
+  margin: 10% auto;
+  position: relative;
+  background: #FFF;
+  border: 1px solid #7EABCD;
+}
+.modalTitle {
+  background-color: #00527B;
+  padding: 2px 10px;
+  margin: 0px;
+  color: white;
+}
+.modalClose {
+  background: #666;
+  cursor: pointer;
+  color: #FFF;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  text-align: center;
+  line-height: 20px;
+  width: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px;
+}
+.modalClose:hover {
+  background: #999;
+}
+.modalLoader {
+  text-align: center;
+  padding: 15px 0px;
+}
+.modalLoader > div {
+  height:60px;
+  width:60px;
+  margin:0px auto;
+  position:relative;
+  animation: rotation .6s infinite linear;
+  border-left:6px solid rgba(0,174,239,.15);
+  border-right:6px solid rgba(0,174,239,.15);
+  border-bottom:6px solid rgba(0,174,239,.15);
+  border-top:6px solid rgba(0,174,239,.8);
+  border-radius:100%;
+}
+@keyframes rotation {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(359deg);}
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" /> 
+<link rel="stylesheet" href="main.css"/>
+<title>My app</title>
+</head>
+<body>
+<div>
+  <label for="message">Message:</label>
+  <input id="message" name="message" />
+  <button id="close">Close</button>
+  <button id="accept">Accept</button>
+  <button id="modal">Open nested modal</button>
+</div>
+<script src="//code.jquery.com/jquery-1.11.3.js"></script>
+<script src="modal.js"></script>
+<script>
+var message = document.getElementById('message');
+
+
+$(function() {  
+  var input = $('input[name=message]');
+  var accept = $('#accept').prop('disabled', true);
+  var close = $('#close').click(function() {
+    modalInstance.dismiss();
+  });
+  
+  setInterval(function() {
+    accept.prop('disabled', !input.val());
+  }, 100);
+  
+  accept.click(function() {
+    modalInstance.close(input.val());
+  });
+  
+  $('#modal').click(function() {
+    var promise = modal.open({ url: 'nested.html' });
+	promise.then(
+	  (val) => console.log('From nested: ' + val),
+	  () => console.log('Nested dismissed')
+	);
+  });
+});
+</script>
+</body>
