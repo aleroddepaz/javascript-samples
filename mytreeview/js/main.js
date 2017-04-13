@@ -52,8 +52,6 @@ require([ 'jquery', 'src/treeview' ], function($, TreeView) {
       }
     ];
 
-    var start = new Date();
     TreeView('#food-tree', data);
-    console.log(new Date() - start);
   });
 });
