@@ -1,5 +1,4 @@
 angular.module 'samplePopup'
-
   .factory 'Entities', ->
     get: ->
       [
