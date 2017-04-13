@@ -1,26 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" /> 
-<link rel="stylesheet" href="main.css"/>
-<title>My app</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="main.css"/>
+  <title>My app</title>
 </head>
 <body>
-<div>
-  <button id="button">Click me!</button>
-  <span id="result"/>
-</div>
-<script src="modal.js"></script>
-<script>
-var button = document.getElementById('button');
-var result = document.getElementById('result');
-
-button.addEventListener('click', function() {
-  var promise = modal.open({ url: 'modal.html' });
-  promise.then(
-    (v) => { result.innerHTML = 'Accepted: ' + v; },
-    () => { result.innerHTML = 'Rejected'; }
-  );
-});
-</script>
+  <div>
+    <button id="button">Click me!</button>
+    <span id="result"/>
+  </div>
+  <script src="modal.js"></script>
+  <script>
+  const result = document.getElementById('result');
+  document.getElementById('button').addEventListener('click', () => {
+    modal.open({ url: 'modal.html' }).then(
+      (v) => { result.innerHTML = 'Accepted: ' + v; },
+      () => { result.innerHTML = 'Rejected'; }
+    );
+  });
+  </script>
 </body>
