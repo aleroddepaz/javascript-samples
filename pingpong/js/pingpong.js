@@ -1,145 +1,127 @@
-var KEY = {
-	UP: 38,
-	DOWN: 40,
-	W: 87,
-	S: 83,
-	PAUSE: 80
-}
+function Score(id) {
+  let score = 0;
+  const elem = document.getElementById(id);
+	elem.innerHTML = score;
+	this.increment = function() {
+		score++;
+		elem.innerHTML = score;
+	};
+};
 
-var pingpong = {
-	scoreA: 0,
-	scoreB: 0,
-	paused: false
-}
+function Ball(elem) {
+  let $elem = $(elem);
+	let speed = 5;
 
-pingpong.pressedKeys = [];
+  this.height = $elem.height();
+	this.width = $elem.width();
+  this.x = 150;
+	this.y = 100;
+	this.directionX = 1;
+	this.directionY = 1;
+	this.render = function render() {
+		$elem.css({ 'left': this.x, 'top': this.y });
+	};
+	this.update = function update() {
+		this.x += speed * this.directionX;
+		this.y += speed * this.directionY;
+	};
+	this.reset = function reset(x, y, dir_x) {
+	  this.x = x;
+	  this.y = y;
+	  this.directionX = dir_x;
+	};
+};
 
-pingpong.ball = {
-	speed: 5,
-	x: 150,
-	y: 100,
-	directionX: 1,
-	directionY: 1,
-	height: parseInt($('#ball').height()),
-	width: parseInt($('#ball').width())
-}
+function Paddle(elem) {
+  let $elem = $(elem);
 
-pingpong.playground = {
-	height: parseInt($('#playground').height()),
-	width: parseInt($('#playground').width())
-}
-
-pingpong.paddleA = initializePaddle('#paddleA');
-pingpong.paddleB = initializePaddle('#paddleB');
-
-function initializePaddle(paddle) {
-	var paddle = $(paddle);
-	return {
-		top: parseInt(paddle.css('top')),
-		left: parseInt(paddle.css('left')),
-		width: parseInt(paddle.css('width')),
-		height: parseInt(paddle.css('height'))
+  this.height = $elem.height();
+  this.width = $elem.width();
+	this.left = parseInt($elem.css('left'));
+	this.top = function top() {
+		return parseInt($elem.css('top'));
+	};
+	this.move = function move(offset) {
+		$elem.css('top', this.top() + offset);
 	}
-}
+};
 
-$(function(){
-	pingpong.timer = setInterval(gameloop, 30);
-	
-	$(document).keydown(function(e){
-		if(e.which == KEY.PAUSE){
-			if(pingpong.paused){
-				pingpong.paused = false;
-				pingpong.timer = setInterval(gameloop, 30);
+$(function() {
+	const KEYS = {
+		UP: 38,
+		DOWN: 40,
+		W: 87,
+		S: 83,
+		PAUSE: 80
+	};
+  const pressedKeys = [];
+	const minWidth = 0;
+	const minHeight = 0;
+	const maxWidth = document.getElementById('playground').offsetWidth;
+	const maxHeight = document.getElementById('playground').offsetHeight;
+
+	const scoreA = new Score('scoreA');
+  const scoreB = new Score('scoreB');
+	const paddleA = new Paddle('#paddleA');
+	const paddleB = new Paddle('#paddleB');
+	const ball = new Ball('#ball');
+
+	let timer = setInterval(gameloop, 30);
+	let paused = false;
+
+	$(document).keydown(function(e) {
+		if(e.which === KEYS.PAUSE) {
+			if(paused) {
+				timer = setInterval(gameloop, 30);
 			} else {
-				pingpong.paused = true;
-				clearInterval(pingpong.timer);
+				clearInterval(timer);
+			}
+			paused = !paused;
+		}
+		pressedKeys[e.which] = true;
+	});
+
+	$(document).keyup(function(e) {
+		pressedKeys[e.which] = false;
+	});
+
+	function gameloop() {
+		ball.update();
+		if (!(minHeight < ball.y && ball.y < maxHeight - ball.height)) {
+			ball.directionY *= -1;
+		} else if (ball.x >= maxWidth - ball.width) {
+			scoreB.increment();
+			ball.reset(250, 100, -1);
+		} else if (ball.x <= minWidth) {
+			scoreA.increment();
+			ball.reset(150, 100, 1);
+		}
+
+		const correctedHeight = ball.height / 1.5;
+		if (ball.x <= paddleA.left + paddleA.width && ball.x >= paddleA.left + paddleA.width - 5) {
+			if (ball.y <= paddleA.top() + paddleA.height && ball.y + correctedHeight >= paddleA.top()) {
+				ball.directionX = 1;
 			}
 		}
-		pingpong.pressedKeys[e.which] = true;
-	});
-	$(document).keyup(function(e){
-		pingpong.pressedKeys[e.which] = false;
-	});
+		if (ball.x >= paddleB.left - ball.width && ball.x <= paddleB.left - ball.width + 5) {
+			if (ball.y <= paddleB.top() + paddleB.height && ball.y + correctedHeight >= paddleB.top()) {
+				ball.directionX = -1;
+			}
+		}
+		ball.render();
+
+		if (pressedKeys[KEYS.UP] && paddleB.top() > minHeight) {
+			paddleB.move(-5);
+		}
+		if (pressedKeys[KEYS.DOWN] && paddleB.top() + paddleB.height < maxHeight) {
+			paddleB.move(+5);
+		}
+
+		if (pressedKeys[KEYS.W] && paddleA.top() > minHeight) {
+			paddleA.move(-5);
+		}
+		if (pressedKeys[KEYS.S] && paddleA.top() + paddleA.height < maxHeight) {
+			paddleA.move(+5);
+		}
+	}
 });
-
-function gameloop() {
-	moveBall();
-	movePaddles();
-}
-
-function moveBall() {
-	var playground = pingpong.playground;
-	var ball = pingpong.ball;
-	ball.x += ball.speed * ball.directionX;
-	ball.y += ball.speed * ball.directionY;
-	
-	if (!ball.y.between(0, playground.height - ball.height)) {
-		ball.directionY *= -1;
-	}
-	else if (ball.x >= playground.width - ball.width) {
-		pingpong.scoreB++;
-		$('#scoreB').html(pingpong.scoreB);
-		ball.x = 250;
-		ball.y = 100;
-		$('#ball').css({ 'left': ball.x, 'top': ball.y });
-		ball.directionX = -1;
-	}
-	else if (ball.x <= 0) {
-		pingpong.scoreA++;
-		$('#scoreA').html(pingpong.scoreA);
-		ball.x = 150;
-		ball.y = 100;
-		$('#ball').css({ 'left': ball.x, 'top' : ball.y });
-		ball.directionX = 1;
-	}
-	
-	var correctedHeight = ball.height/1.5
-	var paddleA = pingpong.paddleA;
-	var paddleB = pingpong.paddleB;
-	
-	paddleA.top = parseInt($('#paddleA').css('top'));
-	if (ball.x <= paddleA.left + paddleA.width && ball.x >= paddleA.left + paddleA.width - 5) {
-		if (ball.y <= paddleA.top + paddleA.height && ball.y + correctedHeight >= paddleA.top) {
-			ball.directionX = 1;
-		}
-	}
-	paddleB.top = parseInt($('#paddleB').css('top'));
-	if (ball.x >= paddleB.left - ball.width && ball.x <= paddleB.left - ball.width + 5) {
-		if (ball.y <= paddleB.top + paddleB.height && ball.y + correctedHeight >= paddleB.top) {
-			ball.directionX = -1;
-		}
-	}
-	$('#ball').css({ 'left': ball.x, 'top': ball.y });
-}
-
-Number.prototype.between = function(a,b){ return a < this && this < b; };
-
-function movePaddles() {
-	if (pingpong.pressedKeys[KEY.UP]) {
-		moveUpPaddle('#paddleB');
-	}
-	if (pingpong.pressedKeys[KEY.DOWN]) {
-		moveDownPaddle('#paddleB');
-	}
-	if (pingpong.pressedKeys[KEY.W]) {
-		moveUpPaddle('#paddleA');
-	}
-	if (pingpong.pressedKeys[KEY.S]) {
-		moveDownPaddle('#paddleA');
-	}
-}
-
-function moveUpPaddle(paddle) {
-	var top = parseInt($(paddle).css('top'));
-	if(top > 0) {
-		$(paddle).css('top', top-5);
-	}
-}
-
-function moveDownPaddle(paddle) {
-	var top = parseInt($(paddle).css('top'));
-	var height = parseInt($(paddle).height());
-	if(top + height < pingpong.playground.height) {
-		$(paddle).css('top', top+5);
-	}
-}
