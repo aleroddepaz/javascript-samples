@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -17,14 +16,15 @@ module.exports = {
         test: /.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.css$/,
+        loader: [ 'style-loader', 'css-loader' ]
       }
     ]
   },
 
   plugins: [
-    new webpack.ProvidePlugin({ 'React': 'react'}),
-    new HtmlWebpackPlugin({
-      template: 'src/index.html'
-    })
+    new HtmlWebpackPlugin({ title: 'Hello, React!' })
   ]
 };

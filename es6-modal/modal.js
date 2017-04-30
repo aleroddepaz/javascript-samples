@@ -1,49 +1,45 @@
-var modalInstance = (function() {
+const modalInstance = (function() {
   top._modalInstance = top._modalInstance || {
-    _stack: [],
+    stack: [],
 
     add: function add(current) {
-      return this._stack.push(current);
+      return this.stack.push(current);
     },
 
     close: function close(reason) {
-      var current = this._stack.pop();
-      current.close();
-      current.resolve(reason);
+      this.stack.pop().close().resolve(reason);
     },
 
     dismiss: function dismiss(reason) {
-      var current = this._stack.pop();
-      current.close();
-      current.reject(reason);
+      this.stack.pop().close().reject(reason);
     }
   };
 
   return top._modalInstance;
 })();
 
-var modal = (function(body) {
+const modal = (function(body) {
   function open(settings) {
-    var url = settings.url;
-    var title = settings.title || 'Info';
-    var width = settings.width || '500px';
+    const url = settings.url;
+    const title = settings.title || 'Info';
+    const width = settings.width || '500px';
 
-    var anchor = document.createElement('a');
+    const anchor = document.createElement('a');
     anchor.innerHTML = '&times;';
     anchor.className = 'modalClose';
     anchor.onclick = function() {
       modalInstance.dismiss();
     };
 
-    var header = document.createElement('h2');
+    const header = document.createElement('h2');
     header.appendChild(document.createTextNode(title));
     header.className = 'modalTitle';
 
-    var loader = document.createElement('div');
+    const loader = document.createElement('div');
     loader.className = 'modalLoader';
     loader.appendChild(document.createElement('div'));
 
-    var frame = document.createElement('iframe');
+    const frame = document.createElement('iframe');
     frame.src = url;
     frame.frameBorder = 0;
     frame.style.display = 'none';
@@ -53,14 +49,14 @@ var modal = (function(body) {
       frame.style.display = 'block';
     };
 
-    var content = document.createElement('div');
+    const content = document.createElement('div');
     content.style.width = width;
     content.appendChild(anchor);
     content.appendChild(header);
     content.appendChild(loader);
     content.appendChild(frame);
 
-    var backdrop = document.createElement('div');
+    const backdrop = document.createElement('div');
     backdrop.className = 'modalBackdrop';
     backdrop.appendChild(content);
     body.appendChild(backdrop);
@@ -69,11 +65,14 @@ var modal = (function(body) {
       modalInstance.add({
         resolve: resolve,
         reject: reject,
-        close: () => body.removeChild(backdrop)
+        close: function() {
+          body.removeChild(backdrop);
+          return this;
+        }
       });
     });
   };
-  
+
   return {
     open: open
   };

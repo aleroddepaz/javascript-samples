@@ -1,3 +1,6 @@
+import React from 'react';
+
+import './game.css';
 import Board from './board.jsx';
 import calculateWinner from './calculate-winner.js';
 

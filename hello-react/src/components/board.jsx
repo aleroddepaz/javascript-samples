@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Square from './square.jsx';
 
 /**
@@ -8,12 +10,12 @@ export default function Board(props) {
   const positions = [[0, 1, 2], [3, 4, 5], [6, 7, 8]];
   return (
     <div>
-      {positions.map((row) => {
+      {positions.map((row, x) => {
         return (
-          <div className="board-row">
+          <div key={'row' + x} className="board-row">
             {row.map((i) => {
               return (
-                <Square value={props.squares[i]}
+                <Square key={i} value={props.squares[i]}
                   onClick={() => props.onClick(i)} />
               );
             })}
