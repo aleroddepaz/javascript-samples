@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './src/main.jsx',
@@ -7,7 +8,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'build.js',
-    publicPath: '/assets/'
+    publicPath: '/'
   },
 
   module: {
@@ -21,6 +22,9 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.ProvidePlugin({ 'React': 'react'})
+    new webpack.ProvidePlugin({ 'React': 'react'}),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html'
+    })
   ]
 };
